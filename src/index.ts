@@ -258,3 +258,92 @@ app.post("/tasks", async (req: Request, res: Response) => {
   }
 })
 
+app.put("/tasks/:id", async (req: Request, res: Response) => {
+  try {
+    const idToEdit = req.params.id
+
+    const newId = req.body.id
+    const newTitle = req.body.title
+    const newDescription = req.body.description
+    const newCreatedAt = req.body.created_at
+    const newStatus = req.body.status
+
+    if(newId !== undefined){
+      if(typeof newId !== "string"){
+        res.status(400)
+        throw new Error("Id deve ser uma string")
+      }
+      if(newId.length < 4){
+        res.status(400)
+        throw new Error("Id deve possuir pelo menos 4 caracteres")
+      }
+    }
+    if(newTitle !== undefined){
+      if(typeof newTitle !== "string"){
+        res.status(400)
+        throw new Error("Title deve ser uma string")
+      }
+      if(newTitle.length < 2){
+        res.status(400)
+        throw new Error("Title deve possuir pelo menos 2 caracteres")
+      }
+    }
+
+    if(newDescription !== undefined){
+      if(typeof newDescription !== "string"){
+        res.status(400)
+        throw new Error("Description deve ser string")
+      }
+    }
+
+    if(newCreatedAt !== undefined){
+      if(typeof newCreatedAt !== "string"){
+        res.status(400)
+        throw new Error("CreatedAt deve ser string")
+      }
+    }
+
+    if(newStatus !== undefined){
+      if(typeof newStatus !== "number"){
+        res.status(400)
+        throw new Error("Status deve ser number (0 ou 1)")
+      }
+    }
+
+    const [task]: TTasksDB[] | undefined = await db("tasks").where({id: idToEdit})
+
+    if(!task){
+      res.status(404)
+      throw new Error("Id não encontrado")
+    }
+
+    const newTask : TTasksDB = {
+      id: newId || task.id, 
+      title: newTitle || task.title, 
+      description: newDescription || task.description,
+      created_at: newCreatedAt || task.created_at,
+      status: isNaN(newStatus) ? task.status : newStatus
+    }
+
+    await db('tasks').update(newTask).where({id : idToEdit})
+
+    res.status(200).send({
+      message: "Task criada com sucesso.",
+      user: newTask
+    })
+
+
+  } catch (error) {
+      console.log(error)
+
+      if (req.statusCode === 200) {
+          res.status(500)
+      }
+
+      if (error instanceof Error) {
+          res.send(error.message)
+      } else {
+          res.send("Erro inesperado")
+      }
+  }
+})
