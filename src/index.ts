@@ -364,6 +364,7 @@ app.delete("/tasks/:id", async (req: Request, res: Response) => {
       throw new Error('id não encontrado')
     }
 
+    await db('users_tasks').del().where({task_id: idToDelete})
     await db('tasks').del().where({id: idToDelete})
     res.status(200).send({message: "Task deletada com sucesso."})
 
