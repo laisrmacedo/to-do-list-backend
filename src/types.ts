@@ -5,3 +5,11 @@ export type TUserDB = {
   password: string
 }
 
+export type TTasksDB = {
+  id: string,
+  title: string,
+  description: string,
+  created_at: string,
+  status: number
+}
+
