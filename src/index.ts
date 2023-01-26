@@ -328,7 +328,7 @@ app.put("/tasks/:id", async (req: Request, res: Response) => {
     await db('tasks').update(newTask).where({id : idToEdit})
 
     res.status(200).send({
-      message: "Task criada com sucesso.",
+      message: "Task editada com sucesso.",
       user: newTask
     })
 
