@@ -14,6 +14,8 @@ CREATE TABLE tasks (
 		status INTEGER DEFAULT (0) NOT NULL
 );
 
+DROP TABLE tasks;
+
 CREATE TABLE users_tasks (
 		user_id TEXT NOT NULL,
 		task_id TEXT NOT NULL,
@@ -43,3 +45,18 @@ VALUES
 SELECT * FROM users;
 SELECT * FROM tasks;
 SELECT * FROM users_tasks;
+
+--Relaçoes que fazem a mesma coisa
+
+SELECT * FROM users_tasks
+INNER JOIN users
+ON users_tasks.user_id = users.id
+RIGHT JOIN tasks
+ON users_tasks.task_id = tasks.id;
+
+SELECT * FROM tasks
+LEFT JOIN users_tasks
+ON users_tasks.task_id = tasks.id
+LEFT JOIN users
+ON users_tasks.user_id = users.id;
+

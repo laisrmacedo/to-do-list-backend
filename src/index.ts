@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { db } from './database/knex'
-import { TTasksDB, TUserDB, TUserTaskDB } from './types'
+import { TTasksDB, TTasksWithUsers, TUserDB, TUserTaskDB } from './types'
 
 const app = express()
 
@@ -475,6 +475,58 @@ app.delete("/tasks/:taskId/users/:userId", async (req: Request, res: Response) =
     res.status(201).send({
       message: "User removido da tarefa com sucesso."
     })
+
+  } catch (error) {
+      console.log(error)
+
+      if (req.statusCode === 200) {
+          res.status(500)
+      }
+
+      if (error instanceof Error) {
+          res.send(error.message)
+      } else {
+          res.send("Erro inesperado")
+      }
+  }
+})
+
+app.get("/tasks/users", async (req: Request, res: Response) => {
+  try {
+    // const result = await db('tasks')
+    // .select(
+    //   "tasks.id AS taskId",
+    //   "title",
+    //   "description",
+    //   "created_at AS createdAt",
+    //   "status",
+    //   "user_id AS userId",
+    //   "name",
+    //   "email",
+    //   "password"
+    // )
+    // .leftJoin('users_tasks', 'users_tasks.task_id', '=', 'tasks.id')
+    // .leftJoin("users", "users_tasks.user_id", "=", "users.id")
+
+    const tasks: TTasksDB[] = await db('tasks')
+    const result: TTasksWithUsers[] = []
+
+    for(let task of tasks){
+      let responsibles = []
+      const users_tasks: TUserTaskDB[] = await db('users_tasks').where({task_id: task.id})
+
+      for(let user_task of users_tasks){
+        const [ user ]: TUserDB[] = await db('users').where({id: user_task.user_id})
+        responsibles.push(user)
+      }
+
+      result.push({
+        ...task,
+        responsibles
+      })
+    }
+
+    res.status(201).send(result)
 
   } catch (error) {
       console.log(error)
