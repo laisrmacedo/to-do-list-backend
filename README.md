@@ -1,6 +1,6 @@
 # Projeto To-do List 
 
-API de gestão de tarefas de uma empresa, onde é possível cadastrar membros e tarefas da equipe.
+API de gestão de tarefas de uma empresa, onde é possível cadastrar membros e tarefas da equipe. </br>
 Aplicação back-end de servidor express com banco de dados SQLite3. 
 
 # Documentação
