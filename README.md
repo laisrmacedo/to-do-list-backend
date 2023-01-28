@@ -38,6 +38,6 @@ TASKS
 
 ## 👩‍💻 Pessoa autora
 
-Laís Rodrigues Macedo
-📧 laisrodriguesmacedo@gmail.com
+Laís Rodrigues Macedo </br>
+📧 laisrodriguesmacedo@gmail.com </br>
 📞 (+49) 174 7781517
